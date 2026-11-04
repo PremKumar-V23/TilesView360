@@ -13,6 +13,7 @@ test("Login @high", async ({ page }) => {
   console.log("Name Added successfully");
 });
 
+// Add Customer
 test("Customer", async ({ page }) => {
   const customername = "Sanjay";
   await page.goto("https://tilesos.tilesview360.in/login");
@@ -56,6 +57,7 @@ test("Customer", async ({ page }) => {
   console.log("Customer deleted successfully");
 });
 
+//Create Branch
 test.only("Branch", async ({ page }) => {
   const branchname = "Namakkal Branch";
   const branchcode = "NAL123";
@@ -83,4 +85,35 @@ test.only("Branch", async ({ page }) => {
     page.locator(".card.branch-card").getByText(branchname, { exact: true }),
   ).toBeVisible({ timeout: 3000 });
   console.log("Branch created successfully ✅");
+});
+
+//Create Quotation
+test.only("quotation", async ({ page }) => {
+  await page.goto("https://tilesos.tilesview360.in/login");
+  await page
+    .getByRole("textbox", { name: "Email address", exact: true })
+    .fill("ksp@gmail.com");
+  await page
+    .getByRole("textbox", { name: "Password", exact: true })
+    .fill("Password@123");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  console.log("Website signin successfully");
+  await page.getByLabel("Quotations").click();
+  await page.getByRole("Button", { name: "Create quotation" }).click();
+  await page.getByLabel("Customer *").selectOption({ label: "Sharan" });
+  console.log("Customer selected");
+  await page
+    .getByLabel("Customer/default branch")
+    .selectOption({ label: "Namakkal Branch" });
+  console.log("Branch Added");
+  const tileDropdown = page.getByLabel("Tile *");
+  await tileDropdown.scrollIntoViewIfNeeded();
+  await tileDropdown.selectOption({ label: "Glossygranite  ·  GRA-001" });
+  console.log("Tile Added");
+  await page.getByLabel("Surface").selectOption({ label: "Floor" });
+  await page.getByLabel("Area sq.ft").fill("1300");
+  await page.getByLabel("Boxes").fill("20");
+  await page.getByRole("button", { name: "Create quotation" }).last().click();
+  // await page.locator("button").filter({ hasText: "Create quotation" }).first();
+  console.log("Quotation Created");
 });
